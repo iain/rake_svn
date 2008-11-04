@@ -1,0 +1,14 @@
+h1. RakeSvn
+
+Some handy rake tasks for subversion.
+
+* *svn:repository* prints and sets current svn repository url
+* *svn:tags* lists all tags
+* *svn:tag* tag the current trunk, use VERSION=x to name it
+* *svn:add* adds all new files to svn
+* *svn:rm* removes all missing files from svn
+* *svn:both* adds all new files and removes missing files to svn
+* *svn:ignores* sets common ignores for rails
+
+
+Copyright (c) 2008 Iain Hecker, released under the MIT license
