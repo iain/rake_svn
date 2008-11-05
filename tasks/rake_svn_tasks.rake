@@ -33,27 +33,36 @@ namespace :svn do
 
   desc "Configure Subversion for Rails"
   task :ignores do
-    system "svn remove log/*"
-    system "svn commit -m 'removing all log files from subversion'"
-    system 'svn propset svn:ignore "*.log" log/'
-    system "svn update log/"
-    system "svn commit -m 'Ignoring all files in /log/ ending in .log'"
-    system 'svn propset svn:ignore "*.db" db/'
-    system "svn update db/"
-    system "svn commit -m 'Ignoring all files in /db/ ending in .db'"
-    system "svn move config/database.yml config/database.example"
-    system "svn commit -m 'Moving database.yml to database.example to provide a template for anyone who checks out the code'"
-    system 'svn propset svn:ignore "database.yml" config/'
-    system "svn update config/"
-    system "svn commit -m 'Ignoring database.yml'"
-    system "svn remove public/stylesheets/*.css"
-    system "svn commit -m 'Removing stylesheets, in favor of sass'"
-    system 'svn propset svn:ignore "*.css" public/stylesheets'
-    system "svn commit -m 'Ignoring css files in favor of sass'"
-    system 'svn propset svn:ignore "schema.rb" db/'
-    system "svn commit -m 'Ignoring schema.rb'"
-  end
+    svn_ignore 'log', '*'
+    svn_ignore 'db', '*.sqlite*', 'schema.rb'
 
+    svn_ignore 'tmp/cache', '*'
+    svn_ignore 'tmp/pids', '*'
+    svn_ignore 'tmp/sessions', '*'
+    svn_ignore 'tmp/sockets', '*'
+
+    svn_ignore 'public/stylesheets', '*.css'
+
+    svn "move config/database.yml config/database.example"
+    svn "commit -m 'Moving database.yml to database.example to provide a template for anyone who checks out the code'"
+    svn_ignore 'config', 'database.yml'
+  end
 
 end
 
+def svn(command)
+  puts "", "svn #{command}"
+  system "svn #{command}"
+end
+
+def svn_ignore(dir, *files)
+  files.each do |f|
+    svn "remove #{File.join(dir, f)}"
+  end
+  svn "commit -m 'Removing #{files.join(', ')} in #{dir} before ignoring it'"
+  svn "update #{dir}"
+  svn "propset svn:ignore '#{files.join(' ')}' #{dir}"
+  svn "update #{dir}"
+  svn "commit -m 'Ignoring #{files.join(', ')} in #{dir}'"
+  svn "update #{dir}"
+end
