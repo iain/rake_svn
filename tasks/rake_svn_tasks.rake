@@ -43,8 +43,11 @@ namespace :svn do
 
     svn_ignore 'public/stylesheets', '*.css'
 
+    svn "update config/"
     svn "move config/database.yml config/database.example"
     svn "commit -m 'Moving database.yml to database.example to provide a template for anyone who checks out the code'"
+    svn "update config/"
+
     svn_ignore 'config', 'database.yml'
   end
 
