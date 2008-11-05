@@ -54,7 +54,7 @@ namespace :svn do
 end
 
 def svn(command)
-  puts "", "svn #{command}"
+  puts "", "svn #{command.gsub("\r","\n")}"
   system "svn #{command}"
 end
 
@@ -65,7 +65,7 @@ def svn_ignore(dir, *files)
   end
   svn "commit -m 'Removing #{files.join(', ')} in #{dir} before ignoring it'"
   svn "update #{dir}"
-  svn "propset svn:ignore '#{files.join(' ')}' #{dir}"
+  svn "propset svn:ignore '#{files.join("\r")}' #{dir}"
   svn "update #{dir}"
   svn "commit -m 'Ignoring #{files.join(', ')} in #{dir}'"
   svn "update #{dir}"
