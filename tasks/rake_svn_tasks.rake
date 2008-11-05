@@ -59,6 +59,7 @@ def svn(command)
 end
 
 def svn_ignore(dir, *files)
+  svn "update #{dir}"
   files.each do |f|
     svn "remove #{File.join(dir, f)}"
   end
