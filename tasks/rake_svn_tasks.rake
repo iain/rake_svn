@@ -2,7 +2,7 @@ namespace :svn do
 
   desc "Gets the current svn repository url."
   task :repository do
-    SVN_BASE = `svn info | grep ^URL | awk '{print $2}'`
+    SVN_BASE = `svn info | grep ^URL | awk '{print $2}'`.sub(/trunk$/,'').strip
     puts "Using repository #{SVN_BASE}"
   end
 
@@ -32,7 +32,7 @@ namespace :svn do
   task :both => [:add, :rm]
 
   desc "Configure Subversion for Rails"
-  task :ignores do
+  task :init_rails do
     svn_ignore 'log', '*'
     svn_ignore 'db', '*.sqlite*', 'schema.rb'
 
@@ -43,30 +43,53 @@ namespace :svn do
 
     svn_ignore 'public/stylesheets', '*.css'
 
-    svn "update config/"
-    svn "move config/database.yml config/database.example"
-    svn "commit -m 'Moving database.yml to database.example to provide a template for anyone who checks out the code'"
-    svn "update config/"
+    svn "update config/", :verbose => false
+    database_files = Dir.glob("#{File.dirname(__FILE__)}/../database-files/*.yml")
+    FileUtils.cp database_files, "config/", :verbose => true
+    database_files.each do |file|
+      svn "add config/#{File.basename(file)}"
+    end
+    svn "commit -m 'Added example database configurations'"
 
     svn_ignore 'config', 'database.yml'
   end
 
+  desc "Adds an ignore. Use DIR='log' and IGNORE='foo;log' (semicolon separated)"
+  task :ignore do
+    raise "You must specify an existing directory, e.g. DIR='log'" unless File.directory?(ENV['DIR'])
+    raise "You must specify which file(-pattern) to ignore, e.g. IGNORE='*.log'" unless ENV['IGNORE'].blank?
+    svn_ignore ENV['DIR'], *ENV['IGNORE'].split(";")
+  end
+
 end
 
-def svn(command)
-  puts "", "svn #{command.gsub("\r","\n")}"
+def svn(command, options = {})
+  puts "", "svn #{command.gsub("\r","\n")}" unless !options[:verbose]
   system "svn #{command}"
 end
 
 def svn_ignore(dir, *files)
-  svn "update #{dir}"
-  files.each do |f|
-    svn "remove #{File.join(dir, f)}"
+
+  # updating that dir to make sure no conflicts appear
+  svn "update #{dir}", :verbose => false
+
+  # append any files to already ignored files
+  files += `svn pg svn:ignore #{ENV['dir']}`.split("\n")
+  files = files.compact.uniq.collect(&:strip)
+
+  # delete existing files first
+  unless (existing_files = files.reject { |it| File.exist?(it) }).empty?
+    existing_files.each do |f|
+      svn "remove #{File.join(dir, f)}"
+    end
+    svn "commit -m 'Removing #{existing_files.join(', ')} in #{dir} before ignoring it'"
+    svn "update #{dir}", :verbose => false
   end
-  svn "commit -m 'Removing #{files.join(', ')} in #{dir} before ignoring it'"
-  svn "update #{dir}"
+
+  # finally we can ignore the files
   svn "propset svn:ignore '#{files.join("\r")}' #{dir}"
-  svn "update #{dir}"
+  svn "update #{dir}", :verbose => false
   svn "commit -m 'Ignoring #{files.join(', ')} in #{dir}'"
-  svn "update #{dir}"
+  svn "update #{dir}", :verbose => false
+
 end

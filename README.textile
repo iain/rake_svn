@@ -8,7 +8,8 @@ Some handy rake tasks for subversion.
 * *svn:add* adds all new files to svn
 * *svn:rm* removes all missing files from svn
 * *svn:both* adds all new files and removes missing files to svn
-* *svn:ignores* sets common ignores for rails
+* *svn:init_rails* sets common ignores for rails
+* *svn:ignore* add an ignore, use DIR='x' and IGNORE='foo;bar' (semicolon separated)
 
 
 Copyright (c) 2008 Iain Hecker, released under the MIT license
