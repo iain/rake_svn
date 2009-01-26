@@ -11,5 +11,109 @@ Some handy rake tasks for subversion.
 * *svn:init_rails* sets common ignores for rails
 * *svn:ignore* add an ignore, use DIR='x' and IGNORE='foo;bar' (semicolon separated)
 
+h2. Example
+
+Example output of rake svn:init_rails
+
+  At revision 2.
+  D         log/development.log
+  D         log/production.log
+  D         log/server.log
+  D         log/test.log
+  Deleting       log/development.log
+  Deleting       log/production.log
+  Deleting       log/server.log
+  Deleting       log/test.log
+
+  Committed revision 3.
+  At revision 3.
+  property 'svn:ignore' set on 'log'
+  At revision 3.
+  Sending        log
+
+  Committed revision 4.
+  At revision 4.
+  At revision 4.
+  svn: 'db/*.sqlite*' does not exist
+  svn: 'db/schema.rb' does not exist
+  At revision 4.
+  property 'svn:ignore' set on 'db'
+  At revision 4.
+  Sending        db
+
+  Committed revision 5.
+  At revision 5.
+  At revision 5.
+  svn: 'tmp/cache/*' does not exist
+  At revision 5.
+  property 'svn:ignore' set on 'tmp/cache'
+  At revision 5.
+  Sending        tmp/cache
+
+  Committed revision 6.
+  At revision 6.
+  At revision 6.
+  svn: 'tmp/pids/*' does not exist
+  At revision 6.
+  property 'svn:ignore' set on 'tmp/pids'
+  At revision 6.
+  Sending        tmp/pids
+
+  Committed revision 7.
+  At revision 7.
+  At revision 7.
+  svn: 'tmp/sessions/*' does not exist
+  At revision 7.
+  property 'svn:ignore' set on 'tmp/sessions'
+  At revision 7.
+  Sending        tmp/sessions
+
+  Committed revision 8.
+  At revision 8.
+  At revision 8.
+  svn: 'tmp/sockets/*' does not exist
+  At revision 8.
+  property 'svn:ignore' set on 'tmp/sockets'
+  At revision 8.
+  Sending        tmp/sockets
+
+  Committed revision 9.
+  At revision 9.
+  At revision 9.
+  svn: 'public/stylesheets/*.css' does not exist
+  At revision 9.
+  property 'svn:ignore' set on 'public/stylesheets'
+  At revision 9.
+  Sending        public/stylesheets
+
+  Committed revision 10.
+  At revision 10.
+  At revision 10.
+  cp /home/iain/finalist/evp/vendor/plugins/rake_svn/tasks/../database-files/database.oracle.yml /home/iain/finalist/evp/vendor/plugins/rake_svn/tasks/../database-files/database.postgresql.yml /home/iain/finalist/evp/vendor/plugins/rake_svn/tasks/../database-files/database.sqlite3.yml /home/iain/finalist/evp/vendor/plugins/rake_svn/tasks/../database-files/database.sqlite2.yml /home/iain/finalist/evp/vendor/plugins/rake_svn/tasks/../database-files/database.mysql.yml config/
+  A         config/database.oracle.yml
+  A         config/database.postgresql.yml
+  A         config/database.sqlite3.yml
+  A         config/database.sqlite2.yml
+  A         config/database.mysql.yml
+  Adding         config/database.mysql.yml
+  Adding         config/database.oracle.yml
+  Adding         config/database.postgresql.yml
+  Adding         config/database.sqlite2.yml
+  Adding         config/database.sqlite3.yml
+  Transmitting file data .....
+  Committed revision 11.
+  At revision 11.
+  D         config/database.yml
+  Deleting       config/database.yml
+
+  Committed revision 12.
+  At revision 12.
+  property 'svn:ignore' set on 'config'
+  At revision 12.
+  Sending        config
+
+  Committed revision 13.
+  At revision 13.
+
 
 Copyright (c) 2008 Iain Hecker, released under the MIT license
