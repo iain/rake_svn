@@ -57,7 +57,7 @@ namespace :svn do
   desc "Adds an ignore. Use DIR='log' and IGNORE='foo;log' (semicolon separated)"
   task :ignore do
     raise "You must specify an existing directory, e.g. DIR='log'" unless File.directory?(ENV['DIR'])
-    raise "You must specify which file(-pattern) to ignore, e.g. IGNORE='*.log'" unless ENV['IGNORE'].blank?
+    raise "You must specify which file(-pattern) to ignore, e.g. IGNORE='*.log'" if ENV['IGNORE'].blank?
     svn_ignore ENV['DIR'], *ENV['IGNORE'].split(";")
   end
 
