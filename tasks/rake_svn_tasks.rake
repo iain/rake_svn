@@ -6,16 +6,33 @@ namespace :svn do
     puts "Using repository #{SVN_BASE}"
   end
 
-  desc "Tag current trunk.  Use VERSION to provide a version number."
-  task :tag => :repository do
-    version = ENV['VERSION'] or raise 'Provide a VERSION-number, e.g. rake svn:tag VERSION=0.1.3'
-    trunk, tag = SVN_BASE + "trunk", SVN_BASE + "tags/#{version}"
-    system *(%w(svn copy -m) << "Tagged release number #{version} as a copy from trunk." << trunk << tag)
-  end
-  
-  desc "List all tags."
-  task :tags => :repository do
-    system *(%w(svn list -v) << "#{SVN_BASE}tags")
+  desc "Tag current trunk.  Use TAG to provide a version number."
+  task :tag => :"svn:tag:tag"
+
+  namespace :tag do
+
+    task :tag => :version do
+      trunk, tag = SVN_BASE + "trunk", SVN_BASE + "tags/#{TAG}"
+      system *(%w(svn copy -m) << "Tagged release number #{TAG} as a copy from trunk." << trunk << tag)
+    end
+
+    desc "Delete a tag. Use TAG to provide a version number."
+    task :delete => :version do
+      system "svn delete #{SVN_BASE}/tags/#{TAG}"
+    end
+
+    desc "Delete a tag and tag current trunk. Use TAG to provide a version number."
+    task :replace => [:delete_tag, :tag]
+
+    desc "List all tags."
+    task :list => :repository do
+      system *(%w(svn list -v) << "#{SVN_BASE}tags")
+    end
+
+    task :version => :repository do
+      TAG = ENV['TAG'] or raise 'Provide a TAG-number, e.g. rake svn:tag TAG=0.1.3'
+    end
+
   end
 
   desc "Add all new files to repository"
@@ -34,7 +51,7 @@ namespace :svn do
   desc "Configure Subversion for Rails"
   task :init_rails do
     svn_ignore 'log', '*'
-    svn_ignore 'db', '*.sqlite*', 'schema.rb'
+    svn_ignore 'db', '*.sqlite*'
 
     svn_ignore 'tmp/cache', '*'
     svn_ignore 'tmp/pids', '*'

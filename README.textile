@@ -2,14 +2,16 @@ h1. RakeSvn
 
 Some handy rake tasks for subversion.
 
-* *svn:repository* prints and sets current svn repository url
-* *svn:tags* lists all tags
-* *svn:tag* tag the current trunk, use VERSION=x to name it
-* *svn:add* adds all new files to svn
-* *svn:rm* removes all missing files from svn
-* *svn:both* adds all new files and removes missing files to svn
-* *svn:init_rails* sets common ignores for rails
-* *svn:ignore* add an ignore, use DIR='x' and IGNORE='foo;bar' (semicolon separated)
+  rake svn:add          # Add all new files to repository
+  rake svn:rm           # Deletes all missing files from the repository
+  rake svn:both         # Perfom both add and rm
+  rake svn:ignore       # Adds an ignore. Use DIR='x' and IGNORE='foo;bar'
+  rake svn:init_rails   # Configure Subversion for Rails
+  rake svn:repository   # Gets the current svn repository url.
+  rake svn:tag          # Tag current trunk.
+  rake svn:tag:delete   # Delete a tag.
+  rake svn:tag:list     # List all tags.
+  rake svn:tag:replace  # Delete a tag and tag current trunk.
 
 h2. Example
 
@@ -35,7 +37,6 @@ Example output of rake svn:init_rails
   At revision 4.
   At revision 4.
   svn: 'db/*.sqlite*' does not exist
-  svn: 'db/schema.rb' does not exist
   At revision 4.
   property 'svn:ignore' set on 'db'
   At revision 4.
@@ -89,7 +90,7 @@ Example output of rake svn:init_rails
   Committed revision 10.
   At revision 10.
   At revision 10.
-  cp /home/iain/finalist/evp/vendor/plugins/rake_svn/tasks/../database-files/database.oracle.yml /home/iain/finalist/evp/vendor/plugins/rake_svn/tasks/../database-files/database.postgresql.yml /home/iain/finalist/evp/vendor/plugins/rake_svn/tasks/../database-files/database.sqlite3.yml /home/iain/finalist/evp/vendor/plugins/rake_svn/tasks/../database-files/database.sqlite2.yml /home/iain/finalist/evp/vendor/plugins/rake_svn/tasks/../database-files/database.mysql.yml config/
+  cp /home/iain/vendor/plugins/rake_svn/tasks/../database-files/database.oracle.yml /home/iain/vendor/plugins/rake_svn/tasks/../database-files/database.postgresql.yml /home/iain/vendor/plugins/rake_svn/tasks/../database-files/database.sqlite3.yml /home/iain/vendor/plugins/rake_svn/tasks/../database-files/database.sqlite2.yml /home/iain/vendor/plugins/rake_svn/tasks/../database-files/database.mysql.yml config/
   A         config/database.oracle.yml
   A         config/database.postgresql.yml
   A         config/database.sqlite3.yml

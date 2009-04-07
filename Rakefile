@@ -9,3 +9,5 @@ Spec::Rake::SpecTask.new(:spec) do |t|
   t.spec_opts = ['--colour --format progress --loadby mtime --reverse']
   t.spec_files = FileList['spec/**/*_spec.rb']
 end
+
+Dir["#{File.dirname(__FILE__)}/tasks/*.rake"].sort.each { |ext| load ext }
